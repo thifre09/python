@@ -65,7 +65,4 @@ class Jurandy():
     def help(self):
         print(f"Esse método é para ajudar quem precisar com essa classe, se você quiser ver todos os métodos, digite: print(dir(Jurandy)), e todos os metodo apareceram(ignore os que começão com '__'). Outra informação, está classe usa 2 argumentos, o primeiro é estado_computador(defina como 'Usando' ou 'Desligado' para menssagens especiais, qualquer outra coisa resultará na mesma menssagem), o segundo é objeto_bolsa(defina como 'Bolas', 'Cebola' ou 'Maquina de datilografia' para menssagens especiais)")
 
-
-
-jurandy = Jurandy()
-jurandy.numberblocks()
+print(dir(Jurandy))
