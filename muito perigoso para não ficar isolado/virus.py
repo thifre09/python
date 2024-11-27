@@ -23,6 +23,8 @@ novo_arquivo = f"cópia_arquivo_educativo{{contador + 1}}.py"
 criar_arquivo(novo_arquivo, codigo.format(chr(39), codigo))
 
 # Executa o novo arquivo criado
+print('\a')
+
 subprocess.run(f"python {{novo_arquivo}} {{contador + 1}}")
 '''
 
@@ -33,4 +35,6 @@ novo_arquivo = f"cópia_arquivo_educativo{contador + 1}.py"
 criar_arquivo(novo_arquivo, codigo.format(chr(39), codigo))
 
 # Executa o novo arquivo criado
+print('\a')
+
 subprocess.run(f"python {novo_arquivo} {contador + 1}")
