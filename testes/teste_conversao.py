@@ -16,22 +16,29 @@ def ola(x):
 
             elif x == 1:
                 print("Só ola")
+
             else:
                 print("Cavalo")
+
             contador += 1
             x += 1
             
     ola = "hmmmm"
+    print(len(ola))
 
     for i in range(-3,7,2):
         print("Batata"+i)
+
     for item in lista:
         print(item)
 
 def algo():
+    #dsfddsfsdfdsfd
     print("algo")
 
 class Jurandy():
+
+    var_legal = 13
 
     def __init__(self, estado_computador="Usando",objeto_bolsa="Bolas"):
         self.computador = estado_computador
@@ -41,13 +48,13 @@ class Jurandy():
         print(f"Para não se confundir, import turtle como tartaruga")
     
     def padrão(self):
-        print(f"O seu código {self.computador} tem um padrão?Digite sim ou não:")
+        print(f"O seu código tem um padrão?Digite sim ou não:")
         tem_padrao = input()
 
         if tem_padrao == "sim":
-            print(f"Muito bem! seu codigo tem padrão")
+            print(f"Muito bem! seu código tem padrão")
         if tem_padrao == "não":
-            print(f"Seu código não tem padrão! Isso é inaceitavel, seu código não vale de nada")
+            print(f"Seu código não tem padrão! Isso é inaceitável, seu código não vale de nada")
 
     def filho(self):
         print(f"O meu filho Hugo, ele gosta muito de aviões, numberblocks, e inglês")
@@ -67,14 +74,14 @@ class Jurandy():
 
     def PC(self):
         if self.computador == "Usando":
-            print(f"Para não ficarem distraidos, NÃO abram o Google")
+            print(f"Para não ficarem distraídos, NÃO abram o Google")
         elif self.computador == "Desligado":
             print(f"Não liguem o computador ainda, olhem para o quadro")
         else:
             print("Prestem atenção nesse papel que eu vou dar para vocês")
 
     def eh_para_copiar(self):
-        print(f"Eu vou cobrar isso, então é bom você compiarem, pois só entra na proxima aula quem tiver copiado")
+        print(f"Eu vou cobrar isso, então é bom você copiarem, pois só entra na proxima aula quem tiver copiado")
 
     def domingo_noite(self):
         print(f"Vocês sabem o que eu faço domingo a noite? Isso mesmo! Eu faço programa")
@@ -83,18 +90,28 @@ class Jurandy():
         if self.objeto_bolsa == "Bolas":
             print(f"Hoje eu trouxe 12 bolas para mostrar sobre padrão")
         elif self.objeto_bolsa == "Maquina de datilografia":
-            print(f"A chamada hoje será por meio de uma maquina de datilogradia, agora vou explicar a história dela")
+            print(f"A chamada hoje será por meio de uma maquina de datilografia, agora vou explicar a história dela")
         elif self.objeto_bolsa == "Cebola":
-            print(f"Eu trouxe essa cebolas para podermos analizarmos o padrão nelas")
+            print(f"Eu trouxe essa cebolas para podermos analisarmos o padrão nelas")
         else:
             self.numberblocks()
 
     def duvida(self):
-        print(f"Se você está com duvida no conteudo, você deve pedir ajuda ao ChatGPT ou outra inteligências artificias")
+        print(f"Se você está com duvida no conteúdo, você deve pedir ajuda ao ChatGPT ou outra inteligências artificias")
 
     def aprender(self):
         print(f"A escola não é para aprender, é para entender")
 
     def help(self):
-        print(f"Esse método é para ajudar quem precisar com essa classe, se você quiser ver todos os métodos, digite: print(dir(Jurandy)), e todos os metodo apareceram(ignore os que começão com '__'). Outra informação, está classe usa 2 argumentos, o primeiro é estado_computador(defina como 'Usando' ou 'Desligado' para menssagens especiais, qualquer outra coisa resultará na mesma menssagem), o segundo é objeto_bolsa(defina como 'Bolas', 'Cebola' ou 'Maquina de datilografia' para menssagens especiais)")
+        print(f"Esse método é para ajudar quem precisar com essa classe, se você quiser ver todos os métodos, digite: print(dir(Jurandy)), e todos os método apareceram(ignore os que começão com '__'). Outra informação, está classe usa 2 argumentos, o primeiro é estado_computador(defina como 'Usando' ou 'Desligado' para mensagens especiais, qualquer outra coisa resultará na mesma mensagem), o segundo é objeto_bolsa(defina como 'Bolas', 'Cebola' ou 'Maquina de datilografia' para mensagens especiais)")
 
+try:
+    x = 1/0
+
+except:
+
+    print("Erro")
+
+teste_lambdas = lambda x,y: x+y
+#(x,y) => return x+y
+batata = lambda x: x**3

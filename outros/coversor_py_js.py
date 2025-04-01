@@ -21,6 +21,8 @@ class Conversor:
         self.lines.append("")
         self.is_class = False
 
+    # testes gerais / general tests
+
     def booleans(self):
         if self.line.find("True") != -1:
             self.line = self.line.replace("True", "true")
@@ -54,6 +56,36 @@ class Conversor:
     def strings(self):
         self.line = self.line.replace("(f\"", "(\"").replace("\"","`").replace("{","${")
 
+    def nones(self):
+        self.line = self.line.replace("None", "null")
+
+    def lambdas(self):
+        if "lambda " in self.line:
+            self.line = self.line.replace("lambda ", "(").replace(":", ") => {return")
+            self.line += "}"
+
+    def coments(self):
+        while True:
+            if "#" in self.line:
+                try:
+                    if not "#" in self.line.split("\"")[1]:
+                        self.line = self.line.replace("#", "//")
+                        break
+                except:
+                    self.line = self.line.replace("#", "//")
+                    break
+                
+                try:
+                    if not "#" in self.line.split("\'")[1]:
+                        self.line = self.line.replace("#", "//")
+                        break
+                except:
+                    self.line = self.line.replace("#", "//")
+                    break
+            break
+
+    # blocos de código / blocks of code
+
     def variables(self):
         self.tests()
         blocks = self.count_space()
@@ -78,8 +110,8 @@ class Conversor:
         self.next_line()
 
     def ifs(self, tipo):
-        if tipo == 1:
-            self.tests()
+        self.tests()
+        if tipo == 1:     
             blocks = self.count_space()
             temp = self.line.replace(":", ") {").replace("if", "", 1).lstrip()
             temp = "(" + temp
@@ -88,7 +120,6 @@ class Conversor:
             self.new_code += temp + "\n"
             self.next_line()
         elif tipo == 2:
-            self.tests()
             blocks = self.count_space()
             temp = self.line.replace(":", ") {").replace("elif", "", 1).lstrip()
             temp = "(" + temp
@@ -97,8 +128,7 @@ class Conversor:
             self.new_code += temp + "\n"
             self.next_line()
         elif tipo == 3:
-            self.tests()
-            temp = self.line.replace(":", "{")
+            temp = self.line.replace(":", " {")
             self.new_code += temp + "\n"
             self.next_line()
 
@@ -145,11 +175,49 @@ class Conversor:
         self.new_code += temp + "\n"
         self.next_line()
 
-    def prints(self):
-        self.strings()
-        temp = self.line.replace("print", "console.log", 1)
+    def trys(self):
+        temp = self.line.replace(":", " {")
         self.new_code += temp + "\n"
         self.next_line()
+
+    def excepts(self):
+        temp = "catch(error) {"
+        self.new_code += temp + "\n"
+        self.next_line()
+
+    def finallys(self):
+        temp = self.line.replace(":", " {")
+        self.new_code += temp + "\n"
+        self.next_line()
+
+    # funções e métodos/ functions and methods
+
+    def prints(self):
+        self.line = self.line.replace("print", "console.log", 1)
+
+    def inputs(self):
+        self.line = self.line.replace("input", "window.prompt")
+
+    def lens(self):
+        try:
+            self.has_len = self.has_len
+        except:
+            self.has_len = None
+            len_func = """function len(x) {
+    return x.length()
+}
+"""
+            self.new_code = len_func + self.new_code
+
+    def appends(self):
+        self.line = self.line.replace(".append(", ".push(")
+    
+    def removes(self):
+        self.line = self.line.replace(".remove(", ".splice(")
+
+    def indexs(self):
+        self.line = self.line.replace(".index(", ".indexOf(")
+    # métodos principais / main methods
 
     def next_line(self):
         self.spaces_previous = self.count_space()
@@ -167,17 +235,18 @@ class Conversor:
                     self.line_next = self.lines[self.line_index+i]
                     i += 1
                 self.spaces_next = self.count_space(self.line_next)
-                if self.spaces_next < self.spaces_previous and (self.spaces_next - self.spaces_previous) == 1:
+                if self.spaces_next < self.spaces_previous and (self.spaces_previous - self.spaces_next) == 1:
                     blocks = self.spaces_next
                     self.new_code += (blocks*4)*" " + "}\n"
                     self.spaces_previous = self.spaces_next
                 elif self.spaces_next < self.spaces_previous:
-                    while self.spaces_next - self.spaces_previous != 1:
+                    while self.spaces_previous - self.spaces_next != 1:
                         self.spaces_previous -= 1
                         blocks = self.spaces_previous
                         self.new_code += (blocks*4)*" " + "}\n"
                     blocks = self.spaces_next
                     self.new_code += (blocks*4)*" " + "}\n"
+                    self.spaces_previous = self.spaces_next
 
             self.new_code += "\n"
             if self.line_index < len(self.lines):
@@ -214,9 +283,8 @@ class Conversor:
     
     def identify(self):
         a = self.line.lstrip()
-        if a.find("print(") != -1:
-            self.prints()
-        elif a.startswith("def "):
+    
+        if a.startswith("def "):
             self.func()
         elif a.startswith("if "):
             self.ifs(1)
@@ -228,11 +296,16 @@ class Conversor:
             self.whiles()
         elif a.startswith("for "):
             self.fors()
-        elif a.startswith("class"):
+        elif a.startswith("class "):
             self.classes()
+        elif a.startswith("try:"):
+            self.trys()
+        elif a.startswith("except ") or a.startswith("except:") or a.startswith("except(") or a.startswith("except ("):
+            self.excepts()
+        elif a.startswith("finally"):
+            self.finallys()
         elif a.find(" = ") != -1:
             self.variables()
-        
         else:
             blocks = self.count_space()
             self.tests()
@@ -240,13 +313,15 @@ class Conversor:
             self.new_code += (blocks*4)*" " + temp + "\n"
             self.next_line()
 
-    def tests(self):
-        self.booleans()
-        self.operators()
-        self.or_and_not()
-        self.type_func()
-        self.selfs()
-        self.strings()
+    def tests(self, callbacks=None):
+        if callbacks is None:
+            callbacks = [self.prints, self.inputs, self.lens, self.appends, self.removes, self.indexs,
+                         self.booleans, self.operators, self.or_and_not, self.type_func, self.selfs, 
+                         self.strings, self.nones, self.lambdas, self.coments]
+            
+        for callback in callbacks:
+            if callable(callback):
+                callback()
             
 
 if __name__ == "__main__":
