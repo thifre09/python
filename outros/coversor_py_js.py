@@ -6,8 +6,7 @@ def main():
         while file.line_index < len(file.lines)-1:
             file.identify()
             with open(file_path.replace(".py",".js"),"w", encoding="utf-8") as new_file:
-                new_file.write(file.new_code)
-        
+                new_file.write(file.new_code)    
 
 class Conversor:
 
@@ -20,6 +19,10 @@ class Conversor:
         self.line_next = None
         self.lines.append("")
         self.is_class = False
+        self.is_func = False
+        self.has_len = None
+        self.variables_list = {}
+        self.is_lambda = False
 
     # testes gerais / general tests
 
@@ -44,8 +47,8 @@ class Conversor:
                 self.line = self.line.replace(i, list_js[index])
 
     def type_func(self):
-        list_py = ["str(", "int(", "float(", "bool("]
-        list_js = ["String(", "Number(", "Number(", "Boolean("]
+        list_py = ["str(", "int(", "float(", "bool(", "str ", "int ", "float ", "bool "]
+        list_js = ["String(", "Number(", "Number(", "Boolean(", "String ", "Number ", "Number ", "Boolean "]
         for index, i in enumerate(list_py):
             if i in self.line:
                 self.line = self.line.replace(i, list_js[index])
@@ -54,7 +57,8 @@ class Conversor:
         self.line = self.line.replace("self", "this")
 
     def strings(self):
-        self.line = self.line.replace("(f\"", "(\"").replace("\"","`").replace("{","${")
+        if "f\'" in self.line or "f\"" in self.line:
+            self.line = self.line.replace("f\"", "\"").replace("f\'", "\'").replace("\"","`").replace("\'", "`").replace("{","${")
 
     def nones(self):
         self.line = self.line.replace("None", "null")
@@ -63,6 +67,7 @@ class Conversor:
         if "lambda " in self.line:
             self.line = self.line.replace("lambda ", "(").replace(":", ") => {return")
             self.line += "}"
+            self.is_lambda = True
 
     def coments(self):
         while True:
@@ -84,19 +89,42 @@ class Conversor:
                     break
             break
 
+    def is_(self):
+        self.line = self.line.replace(" is ", " === ").replace(" is not ", " !== ")
+
+    def pass_(self):
+        if self.line.strip().startswith("pass "):
+            self.line = self.line.replace("pass ", "")
+
     # blocos de código / blocks of code
 
     def variables(self):
         self.tests()
         blocks = self.count_space()
         temp = self.line.lstrip()
-        if not self.is_class:
-            self.new_code += (blocks*4)*" " + "let " + temp + "\n"
+        if self.is_class and not self.is_func:
+            var = temp.split(maxsplit=1)[0].split("[")[0]
+            self.new_code += (blocks*4)*" " + "static " + temp + "\n" if var not in self.variables_list and not self.is_lambda else (blocks*4)*" " + temp + "\n"
+            self.variables_list[var] = self.count_space()
+
+        elif self.is_func:
+            var = temp.split(maxsplit=1)[0].split("[")[0]
+            if temp.startswith("this."):
+                (blocks*4)*" " + temp + "\n"
+            else:
+                self.new_code += (blocks*4)*" " + "let " + temp + "\n" if var not in self.variables_list and not self.is_lambda else (blocks*4)*" " + temp + "\n"
+            self.variables_list[var] = self.last_def
+
         else:
-            self.new_code += (blocks*4)*" " + temp + "\n"
+            var = temp.split(maxsplit=1)[0].split("[")[0]
+            self.new_code += (blocks*4)*" " + "let " + temp + "\n" if var not in self.variables_list and not self.is_lambda else (blocks*4)*" " + temp + "\n"
+            self.variables_list[var] = -1
+
         self.next_line()
 
     def func(self):
+        self.is_func = True
+        self.last_def = self.count_space()
         self.tests()       
         if not self.is_class:
             temp = self.line.replace("def", "function", 1).replace(":", " {")
@@ -106,6 +134,9 @@ class Conversor:
             if "__init__" in temp:
                 temp = temp.replace("__init__", "constructor")
             temp = (blocks*4)*" " + temp
+        var = self.line.replace("def", "").replace(":", "").replace(")", "").split("(")[-1]
+        var = var.replace("this", "").replace(",", "", 1) if self.is_class else var
+        self.variables_list[var] = self.count_space()
         self.new_code += temp + "\n"
         self.next_line()
 
@@ -148,7 +179,7 @@ class Conversor:
         temp = self.line
         if "range" in temp:
             v1 = str(temp.replace("for", "").lstrip().split(maxsplit=1)[0])
-            v2 = (temp.rstrip(":").split()[-1]).strip(" range()").split(",")
+            v2 = (temp.rstrip(":").split()[-1]).replace("range(", "").replace("range (", "").removesuffix(")").split(",")
             if len(v2) == 1:
                 temp = f"for (let {v1} = 0;{v1} < {v2[0]};{v1}++) " + "{"
             elif len(v2) == 2:
@@ -156,12 +187,19 @@ class Conversor:
             elif len(v2) == 3:
                 temp = f"for (let {v1} = {v2[0]};{v1} < {v2[1]};{v1} += {v2[2]}) " + "{"
             
-
+        elif "enumerate" in temp:
+            v1 = temp.replace("for", "").lstrip()[:temp.find(" in ")-4]
+            v2 = temp.replace(")", "").replace(":", "")[temp.find("(")+1:]
+            temp = f"for (const [{v1}] of {v2}.entries()) " + "{"
         else:
             v1 = str(temp.replace("for", "").lstrip().split(maxsplit=1)[0])
             v2 = str(temp.replace("for", "").lstrip().replace(":", "").split()[-1])
             temp = f"for (let {v1} in {v2}) " + "{"
 
+        var = self.line.split()[1].split(",") if not ("enumerate" in temp) else v2.split(",")
+        for v in var:
+            v.lstrip()
+            self.variables_list[v] = self.count_space()
         temp = (blocks*4)*" " + temp
         self.new_code += temp + "\n"
         self.next_line()
@@ -199,10 +237,8 @@ class Conversor:
         self.line = self.line.replace("input", "window.prompt")
 
     def lens(self):
-        try:
-            self.has_len = self.has_len
-        except:
-            self.has_len = None
+        if ("len(" in self.line or "len (" in self.line) and self.has_len is None:
+            self.has_len = -1
             len_func = """function len(x) {
     return x.length()
 }
@@ -210,13 +246,13 @@ class Conversor:
             self.new_code = len_func + self.new_code
 
     def appends(self):
-        self.line = self.line.replace(".append(", ".push(")
+        self.line = self.line.replace(".append", ".push")
     
     def removes(self):
-        self.line = self.line.replace(".remove(", ".splice(")
+        self.line = self.line.replace(".remove", ".splice")
 
     def indexs(self):
-        self.line = self.line.replace(".index(", ".indexOf(")
+        self.line = self.line.replace(".index", ".indexOf")
     # métodos principais / main methods
 
     def next_line(self):
@@ -254,6 +290,7 @@ class Conversor:
 
         if self.count_space() == 0:
             self.is_class = False
+            self.is_func = False
 
         if self.spaces_previous > self.count_space() and (self.spaces_previous - self.count_space()) == 1:
             blocks = self.count_space()
@@ -265,7 +302,14 @@ class Conversor:
                 self.new_code += (blocks*4)*" " + "}\n"
             blocks = self.count_space()
             self.new_code += (blocks*4)*" " + "}\n"
-        
+
+        a = list(self.variables_list.keys())
+        for g in a:
+            if self.variables_list[g] >= self.count_space():
+                del self.variables_list[g]
+
+        self.is_lambda = False
+ 
     def count_space(self, l=None):
         if l is None:
             l = self.line
@@ -304,7 +348,7 @@ class Conversor:
             self.excepts()
         elif a.startswith("finally"):
             self.finallys()
-        elif a.find(" = ") != -1:
+        elif a.find("=") != -1:
             self.variables()
         else:
             blocks = self.count_space()
@@ -317,12 +361,11 @@ class Conversor:
         if callbacks is None:
             callbacks = [self.prints, self.inputs, self.lens, self.appends, self.removes, self.indexs,
                          self.booleans, self.operators, self.or_and_not, self.type_func, self.selfs, 
-                         self.strings, self.nones, self.lambdas, self.coments]
+                         self.strings, self.nones, self.lambdas, self.coments, self.is_]
             
         for callback in callbacks:
             if callable(callback):
                 callback()
             
-
 if __name__ == "__main__":
     main()

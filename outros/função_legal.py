@@ -1,3 +1,6 @@
+
+
+
 def ordenar(lista):
     tamanho = len(lista)
     lista_ordenada = []

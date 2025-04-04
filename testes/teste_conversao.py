@@ -103,7 +103,7 @@ class Jurandy():
         print(f"A escola não é para aprender, é para entender")
 
     def help(self):
-        print(f"Esse método é para ajudar quem precisar com essa classe, se você quiser ver todos os métodos, digite: print(dir(Jurandy)), e todos os método apareceram(ignore os que começão com '__'). Outra informação, está classe usa 2 argumentos, o primeiro é estado_computador(defina como 'Usando' ou 'Desligado' para mensagens especiais, qualquer outra coisa resultará na mesma mensagem), o segundo é objeto_bolsa(defina como 'Bolas', 'Cebola' ou 'Maquina de datilografia' para mensagens especiais)")
+        print(f"Esse método é para ajudar quem precisar com essa classe, se você quiser ver todos os métodos, digite: print(dir(Jurandy)), e todos os método apareceram(ignore os que começão com __). Outra informação, está classe usa 2 argumentos, o primeiro é estado_computador(defina como Usando ou Desligado para mensagens especiais, qualquer outra coisa resultará na mesma mensagem), o segundo é objeto_bolsa(defina como Bolas, Cebola ou Maquina de datilografia para mensagens especiais)")
 
 try:
     x = 1/0
@@ -113,5 +113,17 @@ except:
     print("Erro")
 
 teste_lambdas = lambda x,y: x+y
-#(x,y) => return x+y
+#(x,y) > return x+y
 batata = lambda x: x**3
+
+for x,y in range(10):
+    print(x)
+    for i in range(y):
+        print(i)
+
+sudoku = [1,2,3,4,5,6,7,8,9]
+
+for index, linha in enumerate(sudoku):
+    sudoku[index] = str(linha)
+
+#for (const [index,linha] of sudoku.entries()) {

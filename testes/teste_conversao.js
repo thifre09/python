@@ -1,7 +1,7 @@
 function len(x) {
     return x.length()
 }
-let lista = [`ola`, 1, true, false, 32.32]
+let lista = ["ola", 1, true, false, 32.32]
 
 function ola(x) {
 
@@ -13,17 +13,17 @@ function ola(x) {
 
             if (x < 1) {
 
-                console.log(`ola`, contador)
+                console.log("ola", contador)
 
-                console.log(`ola`, contador)
+                console.log("ola", contador)
             }
 
             else if (x === 1) {
-                console.log(`Só ola`)
+                console.log("Só ola")
             }
 
             else {
-                console.log(`Cavalo`)
+                console.log("Cavalo")
             }
 
             contador += 1
@@ -31,11 +31,11 @@ function ola(x) {
         }
     }
 
-    let ola = `hmmmm`
+    let ola = "hmmmm"
     console.log(len(ola))
 
     for (let i = -3;i < 7;i += 2) {
-        console.log(`Batata`+i)
+        console.log("Batata"+i)
     }
 
     for (let item in lista) {
@@ -45,16 +45,14 @@ function ola(x) {
 
 function algo() {
     //dsfddsfsdfdsfd
-    console.log(`algo`)
+    console.log("algo")
 }
 
 class Jurandy {
 
-    var_legal = 13
+    static var_legal = 13
 
-    constructor( estado_computador=`Usando`,objeto_bolsa=`Bolas`) {
-        this.computador = estado_computador
-        this.objeto_bolsa = objeto_bolsa
+    constructor( estado_computador="Usando",objeto_bolsa="Bolas") {
     }
 
     turtle() {
@@ -63,12 +61,12 @@ class Jurandy {
 
     padrão() {
         console.log(`O seu código tem um padrão?Digite sim ou não:`)
-        tem_padrao = window.prompt()
+        let tem_padrao = window.prompt()
 
-        if (tem_padrao === `sim`) {
+        if (tem_padrao === "sim") {
             console.log(`Muito bem! seu código tem padrão`)
         }
-        if (tem_padrao === `não`) {
+        if (tem_padrao === "não") {
             console.log(`Seu código não tem padrão! Isso é inaceitável, seu código não vale de nada`)
         }
     }
@@ -95,14 +93,14 @@ class Jurandy {
     }
 
     PC() {
-        if (this.computador === `Usando`) {
+        if (this.computador === "Usando") {
             console.log(`Para não ficarem distraídos, NÃO abram o Google`)
         }
-        else if (this.computador === `Desligado`) {
+        else if (this.computador === "Desligado") {
             console.log(`Não liguem o computador ainda, olhem para o quadro`)
         }
         else {
-            console.log(`Prestem atenção nesse papel que eu vou dar para vocês`)
+            console.log("Prestem atenção nesse papel que eu vou dar para vocês")
         }
     }
 
@@ -115,13 +113,13 @@ class Jurandy {
     }
 
     bolsa() {
-        if (this.objeto_bolsa === `Bolas`) {
+        if (this.objeto_bolsa === "Bolas") {
             console.log(`Hoje eu trouxe 12 bolas para mostrar sobre padrão`)
         }
-        else if (this.objeto_bolsa === `Maquina de datilografia`) {
+        else if (this.objeto_bolsa === "Maquina de datilografia") {
             console.log(`A chamada hoje será por meio de uma maquina de datilografia, agora vou explicar a história dela`)
         }
-        else if (this.objeto_bolsa === `Cebola`) {
+        else if (this.objeto_bolsa === "Cebola") {
             console.log(`Eu trouxe essa cebolas para podermos analisarmos o padrão nelas`)
         }
         else {
@@ -138,7 +136,7 @@ class Jurandy {
     }
 
     help() {
-        console.log(`Esse método é para ajudar quem precisar com essa classe, se você quiser ver todos os métodos, digite: prNumber(dir(Jurandy)), e todos os método apareceram(ignore os que começão com '__'). Outra informação, está classe usa 2 argumentos, o primeiro é estado_computador(defina como 'Usando' ou 'Desligado' para mensagens especiais, qualquer outra coisa resultará na mesma mensagem), o segundo é objeto_bolsa(defina como 'Bolas', 'Cebola' ou 'Maquina de datilografia' para mensagens especiais)`)
+        console.log(`Esse método é para ajudar quem precisar com essa classe, se você quiser ver todos os métodos, digite: prNumber(dir(Jurandy)), e todos os método apareceram(ignore os que começão com __). Outra informação, está classe usa 2 argumentos, o primeiro é estado_computador(defina como Usando ou Desligado para mensagens especiais, qualquer outra coisa resultará na mesma mensagem), o segundo é objeto_bolsa(defina como Bolas, Cebola ou Maquina de datilografia para mensagens especiais)`)
     }
 }
 
@@ -148,10 +146,25 @@ try {
 
 catch(error) {
 
-    console.log(`Erro`)
+    console.log(`${lista}`)
 }
 
-let teste_lambdas = (x,y) => {return x+y}
-//(x,y) => return x+y
-let batata = (x) => {return x**3}
+teste_lambdas = (x,y) => {return x+y}
+//(x,y) > return x+y
+batata = (x) => {return x**3}
+
+for (let x,y = 0;x,y < 10;x,y++) {
+    console.log(x)
+    for (let i = 0;i < y;i++) {
+        console.log(i)
+    }
+}
+
+let sudoku = [1,2,3,4,5,6,7,8,9]
+
+for (const [index, linha] of sudoku.entries()) {
+    sudoku[index] = String(linha)
+}
+
+//for (const [index,linha] of sudoku.entries()) {
 

@@ -1,4 +1,4 @@
-def sudoku(sudoku: list[int]):
+def sudoku(sudoku):
     numeros = {}
     for i in range(1,10):
         numeros[str(i)] = 0
