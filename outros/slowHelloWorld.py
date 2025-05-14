@@ -1,6 +1,4 @@
 import random
-from jurandy import Jurandy
-import typing
 import time
 
 class H:
@@ -19,17 +17,23 @@ class H:
             time.sleep(3)
         elif self.num3 == self.num1:
             time.sleep(2)
+        else:
+            time.sleep(10)
+        
+        return True
 
 class E:
 
-    def verificarJurandy(self):
+    def verificarA(self):
         a = ""
         for i in range(600000):
             a += "a"
-        jurandy1 = Jurandy(estado_computador="Usando", objeto_bolsa="Bolas")
-        jurandy2 = Jurandy(estado_computador="Desligado", objeto_bolsa="Maquina de datilografia")
-        jurandy3 = Jurandy(estado_computador="aaaaaa", objeto_bolsa="Cebola")
-        jurandy4 = Jurandy(estado_computador="aaaaaa2", objeto_bolsa=a)
+        
+        a = a
+        if a == a:
+            a = a
+            return True
+
 
 class L:
     
@@ -39,6 +43,7 @@ class L:
 
         while aleatorio1 != aleatorio2:
             aleatorio2 = random.randint(1, 1000000)
+        return True
 
 class O:
     def __init__(self):
