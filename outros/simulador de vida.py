@@ -13,6 +13,9 @@ class Alimentacao(Enum):
     CARNIVORO = 2
     ONIVORO = 3
 
+class Caracteristicas(Enum):
+    pass
+
 # ===== CLASSES =====
 class Especie:
     def __init__(self, nome):
@@ -21,9 +24,10 @@ class Especie:
         self.seresVivos: list["SerVivo"] = []
 
 class Habitate:
-    def __init__(self, nome: str, caracteristicasVantajosas: list[str]):
+    def __init__(self, nome: str, caracteristicasVantajosas: list[Caracteristicas], caracteristicasDesvantajosas: list[Caracteristicas]):
         self.nome: str = nome
         self.caracteristicasVantajosas: list[str] = caracteristicasVantajosas
+        self.caracteristicasDesvantajosas: list[str] = caracteristicasDesvantajosas
 
 class SerVivo:
     def __init__(self, nomeEspecie: str, expectativa_vida: int, fertilidade: float, tamanho: float, peso: float, 
@@ -118,8 +122,12 @@ def mostrar_detalhes(event, origem):
     elif origem == list_habitats:
         obj = habitates[nome]
         texto += f"Habitat: {obj.nome}\n"
-        texto += "Características Vantajosas/Desvantajosas:\n"
+        texto += "Características Vantajosas:\n"
         for c in obj.caracteristicasVantajosas:
+            texto += f"  - {c}\n"
+            
+        texto += "Características Desvantajosas:\n"
+        for c in obj.caracteristicasDesvantajosas:
             texto += f"  - {c}\n"
 
     details.delete(1.0, tk.END)
@@ -268,7 +276,7 @@ def criar_habitat():
             console.insert(tk.END, "Erro: Nome do habitat vazio!\n")
             return
 
-        hab = Habitate(nome, vantajosas + desvantajosas)
+        hab = Habitate(nome, vantajosas, desvantajosas)
         habitates[nome] = hab
 
         console.insert(tk.END, f"Habitat criado: {nome}\n"
