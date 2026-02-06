@@ -1,6 +1,4 @@
-dicaaat = {0: "ola",
-           1: "batata",
-           2: "fdfgd"}
-
-if "ola" in dicaaat.values():
-    print("simmmmm")
+s: str = str
+s = 1
+if s == str:
+    print("ola")
